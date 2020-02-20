@@ -42,10 +42,6 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
 
 
   int x, y, min, tmp1, tmp2;
-  for(x = 0; x < n; x++) {
-
-  }
-
     for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++){
 
     min = i;
