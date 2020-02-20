@@ -64,22 +64,22 @@ int main(int argc, const char *argv[]) {
         input_file >> BOOKS_SCORES[i];
     }
     input_file >> trash;
-    for(int j=0; !input_file.eof(); j++){
-	    // 3rd line
-	    input_file >> books_in_this_library;
-	    input_file >> LIBRARIES_SIGN_UP_TIME[j];
-	    input_file >> LIBRARIES_SHIP_TIME[j];
+    for (int j = 0; !input_file.eof(); j++) {
+        // 3rd line
+        input_file >> books_in_this_library;
+        input_file >> LIBRARIES_SIGN_UP_TIME[j];
+        input_file >> LIBRARIES_SHIP_TIME[j];
 
-	    input_file >> trash; // end of line
+        input_file >> trash; // end of line
 
-	    // 4rd line
-	    int book;
-	    for (int i = 0; i < books_in_this_library; i++) {
-	        input_file >> book;
-	        BOOKS_IN_LIBRARY[j].insert(book);
-	    }
-	    input_file >> trash;
-	}
+        // 4rd line
+        int book;
+        for (int i = 0; i < books_in_this_library; i++) {
+            input_file >> book;
+            BOOKS_IN_LIBRARY[j].insert(book);
+        }
+        input_file >> trash;
+    }
 
     input_file.close();
 
@@ -91,7 +91,13 @@ int main(int argc, const char *argv[]) {
     // Execute algorithm
     clock_t tStart = clock();
 
-    algorithm_simple(&slices_in_each_type_of_pizza, &types_of_pizza_to_order, M);
+    algorithm_simple(&BOOKS_SCORES, // Input: Puntuación de cada libro
+                     &BOOKS_IN_LIBRARY, // Input: Libros en cada librería
+                     &LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
+                     &LIBRARIES_SHIP_TIME, // Input: Tiempo de ship de cada libreria
+                     DAYS_FOR_SCAN, // Input: Dias para escanear
+                     &BOOKS_TO_PROCESS_IN_EACH_LIBRARY, // Output: Libros a procesar por cada libreria y orden,
+                     &LIBRARIES_PROCESSING_ORDER);// Output: Orden de sign up de cada libreria);
 
     cout << "Time taken: " << clock() - tStart << endl;
 
@@ -114,23 +120,22 @@ int main(int argc, const char *argv[]) {
     ofstream output_file;
     output_file.open(argv[2]);
     if (output_file.is_open()) {
-        output_file << NUM_LIBRARIES << endl;
-        for (int i = 0; i < NUM_LIBRARIES; ++i) {
-            output_file << i << " " << BOOKS_TO_PROCESS_IN_EACH_LIBRARY[i] << endl;
-        }
-        for (auto i: BOOKS_TO_PROCESS_IN_EACH_LIBRARY) {
-//        for (auto j: i) {
-//            books_signed.insert(j);
-//        }
-//    }
-            for (auto i: types_of_pizza_to_order) {
-                output_file << i << " ";
+        output_file << LIBRARIES_PROCESSING_ORDER.size() << endl;
+        for (auto i: LIBRARIES_PROCESSING_ORDER) {
+            output_file << i << " " << BOOKS_TO_PROCESS_IN_EACH_LIBRARY[i].size() << endl;
+            for (auto j: BOOKS_TO_PROCESS_IN_EACH_LIBRARY[i]) {
+                output_file << j << " ";
             }
             output_file << endl;
-        } else {
-            cout << "Can't save the file" << endl;
-            return -1;
         }
-        output_file.close();
 
-        return 0;
+    } else {
+        cout << "Can't save the file" << endl;
+        return -1;
+    }
+
+    output_file.close();
+
+    return 0;
+
+}
