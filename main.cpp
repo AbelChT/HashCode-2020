@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <set>
+#include <list>
 #include <tuple>
 #include <algorithm>
 #include <random>
@@ -14,8 +15,9 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
                       vector<unsigned int> *LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
                       vector<unsigned int> *LIBRARIES_SHIP_TIME, // Input: Tiempo de ship de cada libreria
                       unsigned int DAYS_FOR_SCAN, // Input: Dias para escanear
-                      vector<set<unsigned int>> *BOOKS_TO_PROCESS_IN_EACH_LIBRARY // Output: Libros a procesar por cada libreria
-                      ) {
+                      vector<list<unsigned int>> *BOOKS_TO_PROCESS_IN_EACH_LIBRARY, // Output: Libros a procesar por cada libreria y orden,
+                      list<unsigned int> *LIBRARIES_PROCESSING_ORDER // Output: Orden de sign up de cada libreria
+) {
 //    unsigned int N = slices_in_each_type_of_pizza->size();
 //    unsigned int number_of_slices = 0;
 //
@@ -60,38 +62,52 @@ int main(int argc, const char *argv[]) {
 
 
     // OUTPUT
-    vector<set<unsigned int>> BOOKS_TO_PROCESS_IN_EACH_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
+    vector<list<unsigned int>> BOOKS_TO_PROCESS_IN_EACH_LIBRARY(NUM_LIBRARIES, list<unsigned int>());
+    list<unsigned int> LIBRARIES_PROCESSING_ORDER;
 
     // Execute algorithm
     clock_t tStart = clock();
+
     algorithm_simple(&slices_in_each_type_of_pizza, &types_of_pizza_to_order, M);
+
     cout << "Time taken: " << clock() - tStart << endl;
 
     // Print score
-    unsigned int total_score = 0;
-    for (auto i : types_of_pizza_to_order) {
-        total_score += slices_in_each_type_of_pizza[i];
-    }
-
-    if (total_score <= M) {
-        cout << "Score: " << total_score << endl;
-    } else {
-        cout << "Score: " << "Fail" << endl;
-    }
+//    unsigned int total_score = 0;
+//    set<unsigned int> books_signed;
+//
+//    for (auto i: BOOKS_TO_PROCESS_IN_EACH_LIBRARY) {
+//        for (auto j: i) {
+//            books_signed.insert(j);
+//        }
+//    }
+//    for (auto i : books_signed) {
+//        total_score += BOOKS_SCORES[i];
+//    }
+//
+//    cout << "Score: " << total_score << endl;
 
     // Save output
     ofstream output_file;
     output_file.open(argv[2]);
     if (output_file.is_open()) {
-        output_file << types_of_pizza_to_order.size() << endl;
-        for (auto i: types_of_pizza_to_order) {
-            output_file << i << " ";
+        output_file << NUM_LIBRARIES << endl;
+        for (int i = 0; i < NUM_LIBRARIES; ++i) {
+            output_file << i << " " << BOOKS_TO_PROCESS_IN_EACH_LIBRARY[i] << endl;
         }
-        output_file << endl;
-    } else {
-        cout << "Can't save the file" << endl;
-        return -1;
-    }
-    output_file.close();
+        for (auto i: BOOKS_TO_PROCESS_IN_EACH_LIBRARY) {
+//        for (auto j: i) {
+//            books_signed.insert(j);
+//        }
+//    }
+            for (auto i: types_of_pizza_to_order) {
+                output_file << i << " ";
+            }
+            output_file << endl;
+        } else {
+            cout << "Can't save the file" << endl;
+            return -1;
+        }
+        output_file.close();
 
-    return 0;
+        return 0;
