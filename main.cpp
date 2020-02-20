@@ -33,7 +33,7 @@ int main(int argc, const char *argv[]) {
     unsigned int NUM_BOOKS;
     unsigned int NUM_LIBRARIES;
     unsigned int DAYS_FOR_SCAN;
-
+    char trash, books_in_this_library;
     ifstream input_file;
 
     input_file.open(argv[1]);
@@ -41,16 +41,37 @@ int main(int argc, const char *argv[]) {
         cout << "Can't read the file" << endl;
         return -1;
     }
-    input_file >> M >> N;
+    input_file >> NUM_BOOKS;
+    input_file >> NUM_LIBRARIES;
+    input_file >> DAYS_FOR_SCAN;
+    input_file >> trash; // end of line
 
     vector<unsigned int> BOOKS_SCORES(NUM_BOOKS, 0);
     vector<set<unsigned  int>> BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
     vector<unsigned int> LIBRARIES_SIGN_UP_TIME(NUM_LIBRARIES, 0);
     vector<unsigned int> LIBRARIES_SHIP_TIME(NUM_LIBRARIES, 0);
 
-    for (int i = 0; i < N; i++) {
-        input_file >> slices_in_each_type_of_pizza[i];
+    // 2nd line
+    for (int i = 0; i < NUM_BOOKS; i++) {
+        input_file >> BOOKS_SCORES[i];
     }
+    input_file >> trash;
+    while(!input_file.eof()){
+	    // 3rd line
+	    input_file >> books_in_this_library;
+	    input_file >> LIBRARIES_SIGN_UP_TIME[i];
+	    input_file >> LIBRARIES_SHIP_TIME;
+
+	    input_file >> trash; // end of line
+
+	    // 4rd line
+	    int book;
+	    for (int i = 0; i < books_in_this_library; i++) {
+	        input_file >> book;
+	        BOOKS_IN_LIBRARY[i].insert(book);
+	    }
+	    input_file >> trash;
+	}
 
     input_file.close();
 
