@@ -12,6 +12,11 @@
 
 using namespace std;
 
+void fits(int nB, int signup, int shiptime){
+
+    
+}
+
 void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación de cada libro
                       vector<set<unsigned int>> *BOOKS_IN_LIBRARY, // Input: Libros en cada librería
                       vector<unsigned int> *LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
@@ -21,10 +26,46 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
                       list<unsigned int> *LIBRARIES_PROCESSING_ORDER // Output: Orden de sign up de cada libreria
 ) {
 
+    vector<unsigned int> fitness;
+    vector<unsigned int> LIBRARIES_ORDERED;
+
+    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++)
+    {
+        LIBRARIES_ORDERED.push_front(i);
+    }
+
+    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++)
+    {
+       fitness.push_front(fit(BOOKS_IN_LIBRARY[i], LIBRARIES_SIGN_UP_TIME[i], LIBRARIES_SHIP_TIME[i]));
+    }
+
+
+
+  int x, y, min, tmp1, tmp2;
+  for(x = 0; x < n; x++) {
+
+  }
+
+    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++){
+
+    min = i;
+    for(y = i + 1; y < BOOKS_IN_LIBRARY->size(); y++) {
+      if(fitness[min] > fitness[y]) {
+        min = y;
+      }
+    }
+    tmp1 = fitness[min];
+    tmp2 = LIBRARIES_ORDERED[min];
+    fitness[min] = fitness[i];
+    fitness[i] = tmp1;
+    LIBRARIES_ORDERED[min] = LIBRARIES_ORDERED[i];
+    LIBRARIES_ORDERED[i] = tmp2;
+    }
+
     for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++) {
-        LIBRARIES_PROCESSING_ORDER->push_back(i);
-        for (unsigned int x : BOOKS_IN_LIBRARY->at(i)) {
-            BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(i).push_back(x);
+        LIBRARIES_PROCESSING_ORDER->push_back(LIBRARIES_ORDERED[i]);
+        for (unsigned int x : BOOKS_IN_LIBRARY->at(LIBRARIES_ORDERED[i])) {
+            BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(LIBRARIES_ORDERED[i]).push_back(x);
         }
 
     }
