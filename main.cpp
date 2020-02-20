@@ -1,6 +1,91 @@
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <set>
+#include <tuple>
+#include <algorithm>
+#include <random>
+#include <chrono>
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+using namespace std;
+
+void algorithm_simple(vector<unsigned int> *slices_in_each_type_of_pizza,
+                      vector<set<unsigned int>> *books_to_process_in_each_library,
+                      unsigned int M) {
+//    unsigned int N = slices_in_each_type_of_pizza->size();
+//    unsigned int number_of_slices = 0;
+//
+//    for (unsigned int i = 0; i < N && number_of_slices <= M; i++) {
+//        number_of_slices += slices_in_each_type_of_pizza->at(i);
+//        if (number_of_slices <= M) {
+//            types_of_pizza_to_order->insert(i);
+//        }
+//    }
 }
+
+int main(int argc, const char *argv[]) {
+    if (argc != 3) {
+        cout << "Bad number of parameters" << endl;
+        return -1;
+    }
+
+    // Load data
+    unsigned int NUM_BOOKS;
+    unsigned int NUM_LIBRARIES;
+    unsigned int DAYS_FOR_SCAN;
+
+    ifstream input_file;
+
+    input_file.open(argv[1]);
+    if (!input_file.is_open()) {
+        cout << "Can't read the file" << endl;
+        return -1;
+    }
+    input_file >> M >> N;
+
+    vector<unsigned int> BOOKS_SCORES(NUM_BOOKS, 0);
+    vector<set<unsigned  int>> BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
+    vector<unsigned int> LIBRARIES_SIGN_UP_TIME(NUM_LIBRARIES, 0);
+    vector<unsigned int> LIBRARIES_SHIP_TIME(NUM_LIBRARIES, 0);
+
+    for (int i = 0; i < N; i++) {
+        input_file >> slices_in_each_type_of_pizza[i];
+    }
+
+    input_file.close();
+
+    set<unsigned int> types_of_pizza_to_order;
+
+    // Execute algorithm
+    clock_t tStart = clock();
+    algorithm_random(&slices_in_each_type_of_pizza, &types_of_pizza_to_order, M);
+    cout << "Time taken: " << clock() - tStart << endl;
+
+    // Print score
+    unsigned int total_score = 0;
+    for (auto i : types_of_pizza_to_order) {
+        total_score += slices_in_each_type_of_pizza[i];
+    }
+
+    if (total_score <= M) {
+        cout << "Score: " << total_score << endl;
+    } else {
+        cout << "Score: " << "Fail" << endl;
+    }
+
+    // Save output
+    ofstream output_file;
+    output_file.open(argv[2]);
+    if (output_file.is_open()) {
+        output_file << types_of_pizza_to_order.size() << endl;
+        for (auto i: types_of_pizza_to_order) {
+            output_file << i << " ";
+        }
+        output_file << endl;
+    } else {
+        cout << "Can't save the file" << endl;
+        return -1;
+    }
+    output_file.close();
+
+    return 0;
