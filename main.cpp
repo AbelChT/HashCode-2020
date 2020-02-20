@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <string>
+#include <string.h>
 
 using namespace std;
 
@@ -60,11 +62,11 @@ int main(int argc, const char *argv[]) {
         input_file >> BOOKS_SCORES[i];
     }
     input_file >> trash;
-    while(!input_file.eof()){
+    for(int j=0; !input_file.eof(); j++){
 	    // 3rd line
 	    input_file >> books_in_this_library;
-	    input_file >> LIBRARIES_SIGN_UP_TIME[i];
-	    input_file >> LIBRARIES_SHIP_TIME;
+	    input_file >> LIBRARIES_SIGN_UP_TIME[j];
+	    input_file >> LIBRARIES_SHIP_TIME[j];
 
 	    input_file >> trash; // end of line
 
@@ -72,7 +74,7 @@ int main(int argc, const char *argv[]) {
 	    int book;
 	    for (int i = 0; i < books_in_this_library; i++) {
 	        input_file >> book;
-	        BOOKS_IN_LIBRARY[i].insert(book);
+	        BOOKS_IN_LIBRARY[j].insert(book);
 	    }
 	    input_file >> trash;
 	}
