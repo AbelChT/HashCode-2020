@@ -12,6 +12,24 @@
 
 using namespace std;
 
+void algorithm_simple_basic(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación de cada libro
+                      vector<set<unsigned int>> *BOOKS_IN_LIBRARY, // Input: Libros en cada librería
+                      vector<unsigned int> *LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
+                      vector<unsigned int> *LIBRARIES_SHIP_TIME, // Input: Tiempo de ship de cada libreria
+                      unsigned int DAYS_FOR_SCAN, // Input: Dias para escanear
+                      vector<list<unsigned int>> *BOOKS_TO_PROCESS_IN_EACH_LIBRARY, // Output: Libros a procesar por cada libreria y orden,
+                      list<unsigned int> *LIBRARIES_PROCESSING_ORDER // Output: Orden de sign up de cada libreria
+) {
+
+    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++) {
+        LIBRARIES_PROCESSING_ORDER->push_back(i);
+        for (unsigned int x : BOOKS_IN_LIBRARY->at(i)) {
+            BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(i).push_back(x);
+        }
+
+    }
+}
+
 unsigned int fit(unsigned int nB, unsigned int signup, unsigned int shiptime){
     return (((1/signup) +shiptime)/2);
 }
@@ -42,7 +60,7 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
 
 
 
-  int min, tmp1, tmp2;
+    int min, tmp1, tmp2;
     for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++){
         min = i;
         for(size_t y = i + 1; y < BOOKS_IN_LIBRARY->size(); y++) {
@@ -67,6 +85,35 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
     }
 }
 
+int get_score(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación de cada libro
+              vector<set<unsigned int>> *BOOKS_IN_LIBRARY, // Input: Libros en cada librería
+              vector<unsigned int> *LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
+              vector<unsigned int> *LIBRARIES_SHIP_TIME, // Input: Tiempo de ship de cada libreria
+              int DAYS_FOR_SCAN, // Input: Dias para escanear
+              vector<list<unsigned int>> *BOOKS_TO_PROCESS_IN_EACH_LIBRARY, // Output: Libros a procesar por cada libreria y orden,
+              list<unsigned int> *LIBRARIES_PROCESSING_ORDER // Output: Orden de sign up de cada libreria
+) {
+    int total_score = 0;
+    int init_time = 0;
+    set<unsigned int> books_signed;
+
+    for (auto i : (*LIBRARIES_PROCESSING_ORDER)) {
+        init_time += LIBRARIES_SIGN_UP_TIME->at(i);
+        int remaining_time = DAYS_FOR_SCAN - init_time;
+        if (remaining_time > 0) {
+            int books_to_ship = LIBRARIES_SHIP_TIME->at(i) * remaining_time;
+            list<unsigned int> books_to_ship_actual_library = (BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(i));
+            for (int j = 0; j < books_to_ship; ++j) {
+                unsigned int it1 = *(std::next(books_to_ship_actual_library.begin(), j));
+                if (books_signed.find(it1) != books_signed.end()) {
+                    total_score += BOOKS_SCORES->at(it1);
+                    books_signed.insert(it1);
+                }
+            }
+        }
+    }
+}
+
 int main(int argc, const char *argv[]) {
     if (argc != 3) {
         cout << "Bad number of parameters" << endl;
@@ -74,9 +121,9 @@ int main(int argc, const char *argv[]) {
     }
 
     // Load data
-    unsigned int NUM_BOOKS;
-    unsigned int NUM_LIBRARIES;
-    unsigned int DAYS_FOR_SCAN;
+    int NUM_BOOKS;
+    int NUM_LIBRARIES;
+    int DAYS_FOR_SCAN;
     ifstream input_file;
 
     input_file.open(argv[1]);
@@ -90,7 +137,7 @@ int main(int argc, const char *argv[]) {
     //input_file >> trash; // end of line
 
     vector<unsigned int> BOOKS_SCORES(NUM_BOOKS, 0);
-    vector<set<unsigned int> > BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
+    vector<set<unsigned int>> BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
     vector<unsigned int> LIBRARIES_SIGN_UP_TIME(NUM_LIBRARIES, 0);
     vector<unsigned int> LIBRARIES_SHIP_TIME(NUM_LIBRARIES, 0);
 
@@ -122,7 +169,7 @@ int main(int argc, const char *argv[]) {
 
 
     // OUTPUT
-    vector<list<unsigned int> > BOOKS_TO_PROCESS_IN_EACH_LIBRARY(NUM_LIBRARIES, list<unsigned int>());
+    vector<list<unsigned int>> BOOKS_TO_PROCESS_IN_EACH_LIBRARY(NUM_LIBRARIES, list<unsigned int>());
     list<unsigned int> LIBRARIES_PROCESSING_ORDER;
 
     // Execute algorithm
@@ -139,17 +186,14 @@ int main(int argc, const char *argv[]) {
     cout << "Time taken: " << clock() - tStart << endl;
 
     // Print score
-//    unsigned int total_score = 0;
-//    set<unsigned int> books_signed;
-//
-//    for (auto i: BOOKS_TO_PROCESS_IN_EACH_LIBRARY) {
-//        for (auto j: i) {
-//            books_signed.insert(j);
-//        }
-//    }
-//    for (auto i : books_signed) {
-//        total_score += BOOKS_SCORES[i];
-//    }
+
+//    int total_score = get_score(&BOOKS_SCORES, // Input: Puntuación de cada libro
+//                                &BOOKS_IN_LIBRARY, // Input: Libros en cada librería
+//                                &LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
+//                                &LIBRARIES_SHIP_TIME, // Input: Tiempo de ship de cada libreria
+//                                DAYS_FOR_SCAN, // Input: Dias para escanear
+//                                &BOOKS_TO_PROCESS_IN_EACH_LIBRARY, // Output: Libros a procesar por cada libreria y orden,
+//                                &LIBRARIES_PROCESSING_ORDER);
 //
 //    cout << "Score: " << total_score << endl;
 
