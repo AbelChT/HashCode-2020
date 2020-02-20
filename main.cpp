@@ -9,9 +9,13 @@
 
 using namespace std;
 
-void algorithm_simple(vector<unsigned int> *slices_in_each_type_of_pizza,
-                      vector<set<unsigned int>> *books_to_process_in_each_library,
-                      unsigned int M) {
+void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación de cada libro
+                      vector<set<unsigned int>> *BOOKS_IN_LIBRARY, // Input: Libros en cada librería
+                      vector<unsigned int> *LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
+                      vector<unsigned int> *LIBRARIES_SHIP_TIME, // Input: Tiempo de ship de cada libreria
+                      unsigned int DAYS_FOR_SCAN, // Input: Dias para escanear
+                      vector<set<unsigned int>> *BOOKS_TO_PROCESS_IN_EACH_LIBRARY // Output: Libros a procesar por cada libreria
+                      ) {
 //    unsigned int N = slices_in_each_type_of_pizza->size();
 //    unsigned int number_of_slices = 0;
 //
@@ -44,7 +48,7 @@ int main(int argc, const char *argv[]) {
     input_file >> M >> N;
 
     vector<unsigned int> BOOKS_SCORES(NUM_BOOKS, 0);
-    vector<set<unsigned  int>> BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
+    vector<set<unsigned int>> BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
     vector<unsigned int> LIBRARIES_SIGN_UP_TIME(NUM_LIBRARIES, 0);
     vector<unsigned int> LIBRARIES_SHIP_TIME(NUM_LIBRARIES, 0);
 
@@ -54,11 +58,13 @@ int main(int argc, const char *argv[]) {
 
     input_file.close();
 
-    set<unsigned int> types_of_pizza_to_order;
+
+    // OUTPUT
+    vector<set<unsigned int>> BOOKS_TO_PROCESS_IN_EACH_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
 
     // Execute algorithm
     clock_t tStart = clock();
-    algorithm_random(&slices_in_each_type_of_pizza, &types_of_pizza_to_order, M);
+    algorithm_simple(&slices_in_each_type_of_pizza, &types_of_pizza_to_order, M);
     cout << "Time taken: " << clock() - tStart << endl;
 
     // Print score
