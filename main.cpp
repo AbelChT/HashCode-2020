@@ -21,22 +21,13 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
                       list<unsigned int> *LIBRARIES_PROCESSING_ORDER // Output: Orden de sign up de cada libreria
 ) {
 
-    for (size_t i = 0; i < BOOKS_IN_LIBRARY.size(); i++)
-    {
-        LIBRARIES_PROCESSING_ORDER.push_back(i);
-        for (auto x : BOOKS_IN_LIBRARY[i]){
-            BOOKS_TO_PROCESS_IN_EACH_LIBRARY.push_back(x);
+    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++) {
+        LIBRARIES_PROCESSING_ORDER->push_back(i);
+        for (unsigned int x : BOOKS_IN_LIBRARY->at(i)) {
+            BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(i).push_back(x);
         }
+
     }
-//    unsigned int N = slices_in_each_type_of_pizza->size();
-//    unsigned int number_of_slices = 0;
-//
-//    for (unsigned int i = 0; i < N && number_of_slices <= M; i++) {
-//        number_of_slices += slices_in_each_type_of_pizza->at(i);
-//        if (number_of_slices <= M) {
-//            types_of_pizza_to_order->insert(i);
-//        }
-//    }
 }
 
 int main(int argc, const char *argv[]) {
@@ -49,7 +40,6 @@ int main(int argc, const char *argv[]) {
     unsigned int NUM_BOOKS;
     unsigned int NUM_LIBRARIES;
     unsigned int DAYS_FOR_SCAN;
-    char trash, books_in_this_library;
     ifstream input_file;
 
     input_file.open(argv[1]);
@@ -60,7 +50,7 @@ int main(int argc, const char *argv[]) {
     input_file >> NUM_BOOKS;
     input_file >> NUM_LIBRARIES;
     input_file >> DAYS_FOR_SCAN;
-    input_file >> trash; // end of line
+    //input_file >> trash; // end of line
 
     vector<unsigned int> BOOKS_SCORES(NUM_BOOKS, 0);
     vector<set<unsigned int>> BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
@@ -71,22 +61,24 @@ int main(int argc, const char *argv[]) {
     for (int i = 0; i < NUM_BOOKS; i++) {
         input_file >> BOOKS_SCORES[i];
     }
-    input_file >> trash;
-    for (int j = 0; !input_file.eof(); j++) {
-        // 3rd line
-        input_file >> books_in_this_library;
-        input_file >> LIBRARIES_SIGN_UP_TIME[j];
-        input_file >> LIBRARIES_SHIP_TIME[j];
 
-        input_file >> trash; // end of line
+    //input_file >> trash;
+
+    for (int i = 0; i < NUM_LIBRARIES; i++) {
+        // 3rd line
+        int books_in_this_library;
+        input_file >> books_in_this_library;
+        input_file >> LIBRARIES_SIGN_UP_TIME[i];
+        input_file >> LIBRARIES_SHIP_TIME[i];
+
+        //input_file >> trash; // end of line
 
         // 4rd line
         int book;
-        for (int i = 0; i < books_in_this_library; i++) {
+        for (int j = 0; j < books_in_this_library; j++) {
             input_file >> book;
-            BOOKS_IN_LIBRARY[j].insert(book);
+            BOOKS_IN_LIBRARY[i].insert(book);
         }
-        input_file >> trash;
     }
 
     input_file.close();
