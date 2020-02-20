@@ -242,7 +242,7 @@ int main(int argc, const char *argv[]) {
     // Execute algorithm
     clock_t tStart = clock();
 
-    algorithm_random(&BOOKS_SCORES, // Input: Puntuación de cada libro
+    algorithm_simple(&BOOKS_SCORES, // Input: Puntuación de cada libro
                      &BOOKS_IN_LIBRARY, // Input: Libros en cada librería
                      &LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
                      &LIBRARIES_SHIP_TIME, // Input: Tiempo de ship de cada libreria
