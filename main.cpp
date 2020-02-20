@@ -12,56 +12,56 @@
 
 using namespace std;
 
-void fits(int nB, int signup, int shiptime){
-
-    
+unsigned int fit(unsigned int nB, unsigned int signup, unsigned int shiptime){
+    return (((1/signup) +shiptime)/2);
 }
 
 void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación de cada libro
-                      vector<set<unsigned int>> *BOOKS_IN_LIBRARY, // Input: Libros en cada librería
+                      vector< set<unsigned int> > *BOOKS_IN_LIBRARY, // Input: Libros en cada librería
                       vector<unsigned int> *LIBRARIES_SIGN_UP_TIME, // Input: Tiempo de signup de cada libreria
                       vector<unsigned int> *LIBRARIES_SHIP_TIME, // Input: Tiempo de ship de cada libreria
                       unsigned int DAYS_FOR_SCAN, // Input: Dias para escanear
-                      vector<list<unsigned int>> *BOOKS_TO_PROCESS_IN_EACH_LIBRARY, // Output: Libros a procesar por cada libreria y orden,
+                      vector< list<unsigned int> > *BOOKS_TO_PROCESS_IN_EACH_LIBRARY, // Output: Libros a procesar por cada libreria y orden,
                       list<unsigned int> *LIBRARIES_PROCESSING_ORDER // Output: Orden de sign up de cada libreria
 ) {
 
+    std::vector<unsigned int>::iterator it;
     vector<unsigned int> fitness;
     vector<unsigned int> LIBRARIES_ORDERED;
 
-    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++)
-    {
-        LIBRARIES_ORDERED.push_front(i);
-    }
-
-    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++)
-    {
-       fitness.push_front(fit(BOOKS_IN_LIBRARY[i], LIBRARIES_SIGN_UP_TIME[i], LIBRARIES_SHIP_TIME[i]));
-    }
-
-
-
-  int x, y, min, tmp1, tmp2;
+    it = LIBRARIES_ORDERED.begin();
     for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++){
-
-    min = i;
-    for(y = i + 1; y < BOOKS_IN_LIBRARY->size(); y++) {
-      if(fitness[min] > fitness[y]) {
-        min = y;
-      }
+        it = LIBRARIES_ORDERED.insert ( it , i );
     }
-    tmp1 = fitness[min];
-    tmp2 = LIBRARIES_ORDERED[min];
-    fitness[min] = fitness[i];
-    fitness[i] = tmp1;
-    LIBRARIES_ORDERED[min] = LIBRARIES_ORDERED[i];
-    LIBRARIES_ORDERED[i] = tmp2;
+
+    it=fitness.begin();
+    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++)
+    {
+        it = fitness.insert ( it ,  fit(BOOKS_IN_LIBRARY->size(), LIBRARIES_SIGN_UP_TIME->at(i), LIBRARIES_SHIP_TIME->at(i)));
+    }
+
+
+
+  int min, tmp1, tmp2;
+    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++){
+        min = i;
+        for(size_t y = i + 1; y < BOOKS_IN_LIBRARY->size(); y++) {
+            if(fitness[min] > fitness[y]) {
+                min = y;
+            }
+        }
+        tmp1 = fitness[min];
+        tmp2 = LIBRARIES_ORDERED[min];
+        fitness[min] = fitness[i];
+        fitness[i] = tmp1;
+        LIBRARIES_ORDERED[min] = LIBRARIES_ORDERED[i];
+        LIBRARIES_ORDERED[i] = tmp2;
     }
 
     for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++) {
-        LIBRARIES_PROCESSING_ORDER->push_back(LIBRARIES_ORDERED[i]);
+        LIBRARIES_PROCESSING_ORDER->push_front(LIBRARIES_ORDERED[i]);
         for (unsigned int x : BOOKS_IN_LIBRARY->at(LIBRARIES_ORDERED[i])) {
-            BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(LIBRARIES_ORDERED[i]).push_back(x);
+            BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(LIBRARIES_ORDERED[i]).push_front(x);
         }
 
     }
@@ -90,7 +90,7 @@ int main(int argc, const char *argv[]) {
     //input_file >> trash; // end of line
 
     vector<unsigned int> BOOKS_SCORES(NUM_BOOKS, 0);
-    vector<set<unsigned int>> BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
+    vector<set<unsigned int> > BOOKS_IN_LIBRARY(NUM_LIBRARIES, set<unsigned int>());
     vector<unsigned int> LIBRARIES_SIGN_UP_TIME(NUM_LIBRARIES, 0);
     vector<unsigned int> LIBRARIES_SHIP_TIME(NUM_LIBRARIES, 0);
 
@@ -122,7 +122,7 @@ int main(int argc, const char *argv[]) {
 
 
     // OUTPUT
-    vector<list<unsigned int>> BOOKS_TO_PROCESS_IN_EACH_LIBRARY(NUM_LIBRARIES, list<unsigned int>());
+    vector<list<unsigned int> > BOOKS_TO_PROCESS_IN_EACH_LIBRARY(NUM_LIBRARIES, list<unsigned int>());
     list<unsigned int> LIBRARIES_PROCESSING_ORDER;
 
     // Execute algorithm
