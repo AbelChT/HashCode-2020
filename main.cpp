@@ -20,6 +20,14 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
                       vector<list<unsigned int>> *BOOKS_TO_PROCESS_IN_EACH_LIBRARY, // Output: Libros a procesar por cada libreria y orden,
                       list<unsigned int> *LIBRARIES_PROCESSING_ORDER // Output: Orden de sign up de cada libreria
 ) {
+
+    for (size_t i = 0; i < BOOKS_IN_LIBRARY.size(); i++)
+    {
+        LIBRARIES_PROCESSING_ORDER.push_back(i);
+        for (auto x : BOOKS_IN_LIBRARY[i]){
+            BOOKS_TO_PROCESS_IN_EACH_LIBRARY.push_back(x);
+        }
+    }
 //    unsigned int N = slices_in_each_type_of_pizza->size();
 //    unsigned int number_of_slices = 0;
 //
