@@ -13,16 +13,7 @@
 using namespace std;
 
 unsigned int fit(unsigned int nB, unsigned int signup, unsigned int shiptime){
-    return ((1/signup) + shiptime*5 + nB*15 + (nB/shiptime)*0);
-}
-
-unsigned int quitRepeats(set<unsigned int> *books, vector<bool> *scann){
-	int cont = 0;
-	for (int i = 0; i<nB; i++)
-	{
-		if (!scann->at(books->at(i))) cont++;
-	}
-	return cont;
+    return ((1/signup) + shiptime + nB*10 + (nB/shiptime)*5);
 }
 
 void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación de cada libro
@@ -37,7 +28,6 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
     std::vector<unsigned int>::iterator it;
     vector<unsigned int> fitness;
     vector<unsigned int> LIBRARIES_ORDERED;
-    vector<bool> repes;
 
     it = LIBRARIES_ORDERED.begin();
     for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++){
@@ -76,60 +66,10 @@ void algorithm_simple(vector<unsigned int> *BOOKS_SCORES, // Input: Puntuación 
 
     for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++) {
         LIBRARIES_PROCESSING_ORDER->push_front(LIBRARIES_ORDERED[i]);
-        // for (unsigned int x : BOOKS_IN_LIBRARY->at(LIBRARIES_ORDERED[i])) {
-        //     BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(LIBRARIES_ORDERED[i]).push_front(x);
-        // }
+        for (unsigned int x : BOOKS_IN_LIBRARY->at(LIBRARIES_ORDERED[i])) {
+            BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(LIBRARIES_ORDERED[i]).push_front(x);
+        }
 
-    }
-	
-    for (size_t i = 0; i < BOOKS_IN_LIBRARY->size(); i++) {
-
-    	int lib = LIBRARIES_ORDERED[i];
-	    int nLibros = BOOKS_IN_LIBRARY->at(lib) - quitRepeats(BOOKS_IN_LIBRARY->at(lib), repes);
-
-	    DAYS_FOR_SCAN -= LIBRARIES_SIGN_UP_TIME->at(lib);
-    
-	    if((nLibros/LIBRARIES_SHIP_TIME->at(lib)) <= D){
-    		//Mandar los nLibros no repes
-	        for (unsigned int x : BOOKS_IN_LIBRARY->at(LIBRARIES_ORDERED[i])) {
-	        	if(!repes[x]){
-	            	BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(LIBRARIES_ORDERED[i]).push_front(x);
-	            	repes[x] = true;
-	        	}
-	        }
-	    }
-	    else{
-	    	//Ordenar los libros 
-	    	vector<unsigned int> ordenados;
-	    	vector<unsigned int> vCopia(BOOKS_IN_LIBRARY->at(lib));
-	    	for (auto i: BOOKS_IN_LIBRARY){
-	    	 	int cont = 0;
-	    	 	for(auto j: i){
-	    	 		if(!repes(j)){
-	    	 			vCopia[cont] = BOOKS_SCORES[j];
-	    	 			ordenados[cont] = j;
-	    			} 
-	    	}
-
-	    	for (int i=0; i<vCopia->size(); i++){
-	    	 	for (int j = i+1; j<vCopia->size(); j++){
-	    	 		if(vCopia[i]<vCopia[j]){
-	    	 			int aux = vCopia[i];
-	    	 			vCopia[i] = vCopia[j];
-	    	 			vCopia[j] = aux;
-	    	 			aux = ordenados[i];
-	    	 			ordenados[i] = ordenados[j];
-	    	 			ordenados[j] = aux;
-	    	 		}
-	    	 	}
-	    	}
-
-	    	//Enviar los libraries_ship_time[lib]*DAYS_FOR_SCAN mejores 
-	    	for (int i = 0; i < BOOKS_IN_LIBRARY[lib]*DAYS_FOR_SCAN; i++ )
-	            BOOKS_TO_PROCESS_IN_EACH_LIBRARY->at(LIBRARIES_ORDERED[i]).push_front(x);
-	            repes[x] = true;
-	        }
-	    }
     }
 }
 
